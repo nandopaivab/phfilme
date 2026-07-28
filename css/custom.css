@@ -1,0 +1,153 @@
+/* PHFILME - Premium Design Custom Styles & Micro-Animations */
+
+/* Custom Typography & Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+    background-color: #0F0E0C; /* match fine-bg */
+}
+
+/* Scroll Progress Bar at the top of the page */
+#scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(to right, #927339, #B39151, #C9A96E);
+    z-index: 100;
+    width: 0%;
+    transition: width 0.1s ease-out;
+}
+
+/* Animations */
+.fade-in-up {
+    animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom transitions for multilingual changes */
+.lang-transition {
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Premium Glassmorphism Overrides */
+.glass-header {
+    background: rgba(15, 14, 12, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-modal {
+    background: rgba(15, 14, 12, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* Micro-animations and hover cards */
+.hover-card-lift {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.hover-card-lift:hover {
+    transform: translateY(-6px);
+    border-color: rgba(179, 145, 81, 0.4);
+    box-shadow: 0 12px 30px -10px rgba(179, 145, 81, 0.15);
+}
+
+/* Video controls hiding for Safari & iOS native playback compatibility */
+video::-webkit-media-controls,
+video::-webkit-media-controls-container,
+video::-webkit-media-controls-panel,
+video::-webkit-media-controls-start-playback-button,
+video::-webkit-media-controls-overlay-play-button,
+video::-webkit-media-controls-play-button,
+video::-webkit-media-controls-overlay-enclosure,
+video::-webkit-media-controls-enclosure {
+    display: none !important;
+    -webkit-appearance: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
+
+/* Custom Grayscale Effect for Black and White refinement */
+.img-bw-refine {
+    filter: grayscale(100%) contrast(1.15) brightness(0.9);
+    -webkit-filter: grayscale(100%) contrast(1.15) brightness(0.9);
+    transition: filter 0.5s ease, -webkit-filter 0.5s ease, transform 0.5s ease;
+}
+
+.img-bw-refine:hover {
+    filter: grayscale(0%) contrast(1.0) brightness(1.0);
+    -webkit-filter: grayscale(0%) contrast(1.0) brightness(1.0);
+    transform: scale(1.05);
+}
+
+/* Pulsing Scarcity Glow Indicator */
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(179, 145, 81, 0.2);
+        opacity: 0.7;
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(179, 145, 81, 0.6);
+        opacity: 1;
+    }
+}
+
+.scarcity-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #B39151;
+    border-radius: 50%;
+    animation: pulseGlow 2s infinite ease-in-out;
+}
+
+/* Custom range inputs / progress bars aesthetics */
+.progress-bar-glow {
+    box-shadow: 0 0 12px rgba(179, 145, 81, 0.4);
+}
+
+/* Floating WhatsApp pulse transition */
+#whatsapp-float {
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+#whatsapp-float:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 6px 24px rgba(37, 211, 102, 0.5);
+}
+
+/* Full-Bleed Cover Scaling for Hero Video Background (Fixes Mobile Black Bars) */
+#hero-bg-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+#hero-bg-container iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 56.25vw;
+    min-height: 100vh;
+    min-width: 177.77vh;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}

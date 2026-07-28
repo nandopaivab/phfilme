@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <title>PHFILME | Filmes de Casamentos Documentais</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Premium Stylesheets -->
+    <link rel="stylesheet" href="css/custom.css">
+    
+    <!-- Tailwind Custom Theme Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        gold: {
+                            DEFAULT: '#B39151',
+                            light: '#C9A96E',
+                            dark: '#927339'
+                        },
+                        brand: {
+                            green: '#212F24',
+                            greenLight: '#2D3F31',
+                            greenDark: '#17221A'
+                        },
+                        fine: {
+                            bg: '#0F0E0C',
+                            surface: '#161513',
+                            border: '#2A2824',
+                            text: '#F5F4F0',
+                            muted: '#A8A297'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-fine-bg text-fine-text font-sans antialiased overflow-x-hidden">
+
+    <!-- Scroll Progress Indicator -->
+    <div id="scroll-progress"></div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="fixed w-full z-50 glass-header border-b border-fine-border/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <a href="admin.html" class="text-xl sm:text-2xl font-serif tracking-widest text-fine-text flex items-center gap-2 group/logo">
+                <div class="w-8 h-8 rounded-full bg-brand-green border border-gold/30 flex items-center justify-center text-[10px] font-semibold text-white tracking-normal font-sans shadow-sm group-hover/logo:border-gold transition-colors duration-300">
+                    PH
+                </div>
+                <span class="text-gold font-light text-base sm:text-lg tracking-[0.25em]">FILME</span>
+            </a>
+            
+            <nav class="hidden md:flex items-center gap-6 lg:gap-8 text-xs uppercase tracking-widest font-medium text-fine-muted">
+                <a href="#inicio" onclick="scrollToSection(event, '#inicio')" class="hover:text-white transition duration-300" data-translate="nav-start">Início</a>
+                <a href="#sobre" onclick="scrollToSection(event, '#sobre')" class="hover:text-white transition duration-300" data-translate="nav-about">Os Diretores</a>
+                <a href="#portfolio" onclick="scrollToSection(event, '#portfolio')" class="hover:text-white transition duration-300" data-translate="nav-movies">Filmes</a>
+                <a href="#planos" onclick="scrollToSection(event, '#planos')" class="hover:text-white transition duration-300" data-translate="nav-plans">Nossos Pacotes</a>
+                <a href="#faq" onclick="scrollToSection(event, '#faq')" class="hover:text-white transition duration-300" data-translate="nav-faq">Dúvidas</a>
+            </nav>
+
+            <div class="flex items-center gap-3 sm:gap-4">
+                <!-- Multi-Language Dropdown -->
+                <div class="relative inline-block text-left">
+                    <button onclick="toggleLangDropdown()" id="lang-btn" class="flex items-center gap-1.5 border border-fine-border px-2.5 py-1.5 rounded-full text-xs font-semibold text-fine-muted hover:text-gold hover:border-gold/50 transition focus:outline-none bg-brand-green/30">
+                        <span id="current-lang-flag">🇧🇷</span>
+                        <span id="current-lang-label">PT</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] opacity-75"></i>
+                    </button>
+                    <div id="lang-dropdown" class="hidden absolute right-0 mt-2 w-36 bg-fine-surface border border-fine-border rounded-xl shadow-2xl py-1 z-50">
+                        <button onclick="selectLanguage('pt')" class="w-full flex items-center gap-3 px-4 py-2 text-xs text-fine-text hover:bg-brand-green/40 font-medium transition text-left">
+                            <span>🇧🇷</span> Português
+                        </button>
+                        <button onclick="selectLanguage('en')" class="w-full flex items-center gap-3 px-4 py-2 text-xs text-fine-text hover:bg-brand-green/40 font-medium transition text-left">
+                            <span>🇺🇸</span> English
+                        </button>
+                        <button onclick="selectLanguage('es')" class="w-full flex items-center gap-3 px-4 py-2 text-xs text-fine-text hover:bg-brand-green/40 font-medium transition text-left">
+                            <span>🇪🇸</span> Español
+                        </button>
+                        <button onclick="selectLanguage('it')" class="w-full flex items-center gap-3 px-4 py-2 text-xs text-fine-text hover:bg-brand-green/40 font-medium transition text-left">
+                            <span>🇮🇹</span> Italiano
+                        </button>
+                    </div>
+                </div>
+
+                <a href="#proposta" onclick="scrollToSection(event, '#proposta')" class="hidden sm:inline-flex items-center gap-2 border border-gold text-gold hover:bg-gold hover:text-white px-4 py-2 rounded-full text-[11px] uppercase tracking-widest font-semibold transition duration-300">
+                    <i class="fa-regular fa-envelope text-xs"></i>
+                    <span data-translate="nav-cta">Fale Conosco</span>
+                </a>
+
+                <button onclick="toggleMobileMenu()" class="md:hidden text-fine-text hover:text-gold focus:outline-none">
+                    <i id="menu-icon" class="fa-solid fa-bars text-xl sm:text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="hidden md:hidden bg-fine-bg border-b border-fine-border px-6 py-6 space-y-4">
+            <a href="#inicio" onclick="scrollToSection(event, '#inicio'); closeMobileMenu()" class="block text-sm uppercase tracking-wider text-fine-muted hover:text-white" data-translate="nav-start">Início</a>
+            <a href="#sobre" onclick="scrollToSection(event, '#sobre'); closeMobileMenu()" class="block text-sm uppercase tracking-wider text-fine-muted hover:text-white" data-translate="nav-about">Os Diretores</a>
+            <a href="#portfolio" onclick="scrollToSection(event, '#portfolio'); closeMobileMenu()" class="block text-sm uppercase tracking-wider text-fine-muted hover:text-white" data-translate="nav-movies">Filmes</a>
+            <a href="#planos" onclick="scrollToSection(event, '#planos'); closeMobileMenu()" class="block text-sm uppercase tracking-wider text-fine-muted hover:text-white" data-translate="nav-plans">Nossos Pacotes</a>
+            <a href="#faq" onclick="scrollToSection(event, '#faq'); closeMobileMenu()" class="block text-sm uppercase tracking-wider text-fine-muted hover:text-white" data-translate="nav-faq">Dúvidas</a>
+            <a href="#proposta" onclick="scrollToSection(event, '#proposta'); closeMobileMenu()" class="w-full justify-center inline-flex items-center gap-2 bg-brand-green border border-brand-greenLight text-white px-5 py-3 rounded-full text-xs uppercase tracking-widest font-semibold">
+                <i class="fa-regular fa-envelope text-sm"></i> <span data-translate="nav-cta">Fale Conosco</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="inicio" class="relative min-h-[90vh] md:min-h-screen flex flex-col justify-center items-center pt-32 pb-16 md:py-20 overflow-hidden bg-fine-bg">
+        <div id="hero-bg-container" class="absolute inset-0 w-full h-full pointer-events-none select-none z-0">
+            <video id="bg-video" autoplay loop muted playsinline webkit-playsinline preload="auto" disableRemotePlayback class="w-full h-full object-cover pointer-events-none select-none">
+                <source src="https://phfilme.com.br/videos/video_ph.mp4" type="video/mp4">
+            </video>
+        </div>
+        <!-- Adjustable Dark Overlay Layer for perfect text contrast -->
+        <div id="hero-dark-overlay" class="absolute inset-0 bg-black pointer-events-none z-0 transition-opacity duration-300" style="opacity: 0.5;"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-fine-bg/80 via-fine-bg/20 to-fine-bg z-0 pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center fade-in-up">
+            <span class="block text-gold text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] mb-4" data-translate="hero-pre-title">Para casais que valorizam histórias</span>
+            
+            <h1 class="font-serif text-3xl md:text-7xl text-fine-text font-normal leading-tight mb-8 mt-2" id="hero-title">
+                Cada amor tem sua história.<br>A nossa missão é <span class="italic font-light text-gold">transformá-la em filme</span>.
+            </h1>
+            
+            <p class="text-fine-muted text-sm md:text-lg max-w-2xl mx-auto mb-10 leading-relaxed font-light" data-translate="hero-desc">
+                Filmes de casamento documentais, atemporais e sensíveis para noivas que valorizam histórias. Sem poses artificiais ou clichês cansativos. Apenas a poesia real do seu dia.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-xl mx-auto">
+                <a href="#proposta" onclick="scrollToSection(event, '#proposta')" data-translate="hero-btn-date" class="w-full sm:w-1/2 px-6 py-4 bg-gold hover:bg-gold-dark text-white font-semibold text-xs uppercase tracking-[0.2em] rounded-full shadow-lg shadow-gold/20 transition-all duration-300 text-center">
+                    Consultar Disponibilidade de Data
+                </a>
+                <a href="#portfolio" onclick="scrollToSection(event, '#portfolio')" data-translate="hero-btn-portfolio" class="w-full sm:w-1/2 px-6 py-4 bg-gold hover:bg-gold-dark text-white font-semibold text-xs uppercase tracking-[0.2em] rounded-full shadow-lg shadow-gold/20 transition-all duration-300 text-center">
+                    Ver Nosso Portfólio
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- AGENDA DE DISPONIBILIDADE -->
+    <section class="py-16 md:py-20 bg-brand-greenDark/30 border-y border-fine-border relative z-20 backdrop-blur-sm">
+        <div class="max-w-4xl mx-auto px-6 text-center space-y-8">
+            <span class="flex items-center justify-center gap-2 text-gold uppercase tracking-[0.25em] text-xs font-semibold">
+                <span class="scarcity-dot"></span>
+                <span id="label-agenda-section-title" data-translate="scarcity-header">Agenda de Disponibilidade</span>
+            </span>
+            
+            <p class="text-fine-muted max-w-xl mx-auto font-light text-xs tracking-wider" data-translate="scarcity-subtext">
+                Limitamos nossa agenda anual para garantir dedicação absoluta e curadoria artística a cada filme.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto pt-4 text-left">
+                <!-- Agenda 2026 -->
+                <div class="space-y-3 bg-fine-surface/40 p-5 rounded-2xl border border-fine-border/60 hover:border-gold/20 transition duration-300">
+                    <div class="flex justify-between items-center">
+                        <span id="label-agenda-2026-title" data-translate="scarcity-2026" class="text-xs text-fine-muted font-medium tracking-widest uppercase block">Agenda 2026</span>
+                        <span class="text-xs text-gold/80 font-medium tracking-wider" id="label-2026-status">--% Ocupada</span>
+                    </div>
+                    <div class="w-full bg-black/60 border border-fine-border/80 rounded-full h-6 p-[3px] overflow-hidden shadow-inner flex items-center">
+                        <div id="progress-bar-2026" class="h-full bg-gradient-to-r from-gold-dark via-gold to-gold-light rounded-full transition-all duration-1000 ease-out flex items-center justify-end pr-3 progress-bar-glow" style="width: 0%">
+                            <span id="progress-width-2026" class="text-[10px] text-fine-bg font-extrabold tracking-wider">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agenda 2027 -->
+                <div class="space-y-3 bg-fine-surface/40 p-5 rounded-2xl border border-fine-border/60 hover:border-gold/20 transition duration-300">
+                    <div class="flex justify-between items-center">
+                        <span id="label-agenda-2027-title" data-translate="scarcity-2027" class="text-xs text-fine-muted font-medium tracking-widest uppercase block">Agenda 2027</span>
+                        <span class="text-xs text-gold/80 font-medium tracking-wider" id="label-2027-status">--% Ocupada</span>
+                    </div>
+                    <div class="w-full bg-black/60 border border-fine-border/80 rounded-full h-6 p-[3px] overflow-hidden shadow-inner flex items-center">
+                        <div id="progress-bar-2027" class="h-full bg-gradient-to-r from-gold-dark via-gold to-gold-light rounded-full transition-all duration-1000 ease-out flex items-center justify-end pr-3 progress-bar-glow" style="width: 0%">
+                            <span id="progress-width-2027" class="text-[10px] text-fine-bg font-extrabold tracking-wider">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MANIFESTO EDITORIAL -->
+    <section class="py-16 md:py-24 bg-brand-greenDark/40 border-b border-fine-border relative z-20 backdrop-blur-sm">
+        <div class="max-w-4xl mx-auto px-6 text-center space-y-6">
+            <span class="text-gold uppercase tracking-[0.2em] text-xs font-semibold block" data-translate="manifesto-badge">Nossa Filosofia</span>
+            <blockquote class="font-serif text-xl md:text-3xl text-fine-text font-light italic leading-relaxed" data-translate="manifesto-text">
+                "Temos a convicção de que você deseja ver sua história contada de forma única. Nós quebramos o padrão clássico e monótono de gravação, construindo uma narrativa documental e leve."
+            </blockquote>
+            <div class="h-[1px] w-12 bg-gold mx-auto mt-4"></div>
+        </div>
+    </section>
+
+    <!-- TRUST STATS BANNER -->
+    <section class="py-12 bg-fine-bg/80 relative z-20">
+        <div class="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+                <p class="font-serif text-3xl md:text-4xl text-fine-text font-semibold mb-1" data-translate="stats-1-num">100%</p>
+                <p class="text-xs uppercase tracking-widest text-fine-muted" data-translate="stats-1-lbl">Narrativa Autoral</p>
+            </div>
+            <div>
+                <p class="font-serif text-3xl md:text-4xl text-fine-text font-semibold mb-1 animate-[pulse_4s_infinite]" data-translate="stats-2-num">Pelo Mundo</p>
+                <p class="text-xs uppercase tracking-widest text-fine-muted" data-translate="stats-2-lbl">Destination Weddings</p>
+            </div>
+            <div>
+                <p class="font-serif text-3xl md:text-4xl text-fine-text font-semibold mb-1" data-translate="stats-3-num">Elegância</p>
+                <p class="text-xs uppercase tracking-widest text-fine-muted" data-translate="stats-3-lbl">Estética Premium</p>
+            </div>
+            <div>
+                <p class="font-serif text-3xl md:text-4xl text-fine-text font-semibold mb-1" data-translate="stats-4-num">Atendimento</p>
+                <p class="text-xs uppercase tracking-widest text-fine-muted" data-translate="stats-4-lbl">Limitado e Exclusivo</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOBRE OS DIRETORES E EQUIPE -->
+    <section id="sobre" class="py-16 md:py-28 max-w-7xl mx-auto px-6 scroll-mt-24">
+        <div class="space-y-12">
+            <div class="text-center max-w-2xl mx-auto space-y-4">
+                <span class="text-gold uppercase tracking-[0.2em] text-xs font-semibold block" data-translate="about-badge">Quem faz a mágica acontecer</span>
+                <h2 class="font-serif text-3xl md:text-5xl text-fine-text font-normal leading-tight" id="about-title">
+                    Os diretores por trás das <br><span class="italic text-gold font-light">lentes da PHFILME</span>
+                </h2>
+                <p class="text-fine-muted font-light text-sm" data-translate="about-desc">Uma estrutura especializada para garantir que nenhum detalhe passe despercebido.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 pt-8" id="team-container">
+                <!-- Gerado dinamicamente via JS a partir do Firebase -->
+            </div>
+
+            <div class="bg-brand-greenDark/30 border border-fine-border p-8 rounded-2xl max-w-4xl mx-auto space-y-6 text-center mt-12">
+                <div class="text-fine-muted font-light leading-relaxed text-sm md:text-base space-y-4" data-translate="about-paragraph-full">
+                    <p>
+                        Contamos com uma equipe de diretores criativos experientes que garantem a identidade e o padrão de qualidade da nossa empresa. Com essa estrutura, temos capacidade para atender até 3 eventos simultaneamente, mantendo a excelência em cada entrega.
+                    </p>
+                    <p>
+                        Nossa equipe está conosco há anos e compartilha dos mesmos valores e processos. Além disso, toda a pós-produção é realizada internamente, assegurando controle, consistência e qualidade em cada projeto.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO (Dynamic Grid) -->
+    <section id="portfolio" class="py-16 md:py-28 bg-fine-surface border-y border-fine-border/80 scroll-mt-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 space-y-4">
+                <span class="text-gold uppercase tracking-[0.2em] text-xs font-semibold block" data-translate="portfolio-badge">Galeria Cinematográfica</span>
+                <h2 class="font-serif text-3xl md:text-5xl text-fine-text font-normal" data-translate="portfolio-title">Confira abaixo as histórias que já contamos</h2>
+                <p class="text-fine-muted max-w-xl mx-auto font-light text-sm" data-translate="portfolio-desc">Uma sutil curadoria das emoções e destinos incríveis que já tivemos a honra de registrar.</p>
+            </div>
+
+            <div id="portfolio-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <!-- Rendered dynamically by js/app.js -->
+                <div class="col-span-full text-center py-12 text-fine-muted text-sm font-light">
+                    <i class="fa-solid fa-spinner animate-spin text-xl text-gold mb-2 block"></i> Carregando filmes...
+                </div>
+            </div>
+
+            <!-- Portfolio CTA -->
+            <div class="mt-16 text-center">
+                <a href="https://www.youtube.com/@phfilme" target="_blank" data-translate="portfolio-btn" class="inline-flex items-center gap-3 px-8 py-4 bg-brand-green hover:bg-brand-greenLight text-white border border-brand-greenLight/50 font-semibold text-xs uppercase tracking-[0.2em] rounded-full shadow-lg shadow-brand-green/30 transition-all duration-300">
+                    Ver Mais Filmes No YouTube <i class="fa-brands fa-youtube ml-1"></i>
+                </a>
+            </div>
+
+            <!-- VIMEO SHOWCASE: Videos Produzidos pela Equipe -->
+            <div class="mt-20 space-y-8">
+                <div class="text-center space-y-3">
+                    <span class="text-gold uppercase tracking-[0.2em] text-xs font-semibold block" data-translate="vimeo-badge">Produção Própria</span>
+                    <h3 class="font-serif text-2xl md:text-4xl text-fine-text font-normal" data-translate="vimeo-title">Vídeos produzidos pela nossa equipe</h3>
+                    <p class="text-fine-muted max-w-2xl mx-auto font-light text-sm leading-relaxed" data-translate="vimeo-desc">
+                        Cada filmmaker da nossa equipe foi selecionado a dedo e treinado ao longo dos anos para compartilhar da mesma visão, sensibilidade e linguagem cinematográfica que definem o nosso trabalho.
+                    </p>
+                </div>
+
+                <div id="vimeo-showcase-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+                    <!-- Rendered dynamically by js/app.js -->
+                    <div class="col-span-full text-center py-8 text-fine-muted text-sm font-light">
+                        <i class="fa-solid fa-spinner animate-spin text-lg text-gold mb-2 block"></i> Carregando vitrine...
+                    </div>
+                </div>
+
+                <div class="text-center mt-8">
+                    <a href="https://vimeo.com/showcase/12345001" target="_blank" data-translate="vimeo-btn" class="inline-flex items-center gap-3 px-8 py-4 bg-fine-surface hover:bg-fine-bg text-fine-text border border-fine-border hover:border-gold/50 font-semibold text-xs uppercase tracking-[0.2em] rounded-full shadow-lg transition-all duration-300">
+                        Acessar Vitrine Completa no Vimeo <i class="fa-brands fa-vimeo-v ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIFERENCIAIS ARTÍSTICOS -->
+    <section class="py-16 md:py-28 max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-4 space-y-4">
+                <span class="text-gold uppercase tracking-[0.2em] text-xs font-semibold block" data-translate="diff-badge">Nossa Essência</span>
+                <h2 class="font-serif text-3xl md:text-5xl text-fine-text font-normal" data-translate="diff-title">Como criamos sem clichês</h2>
+                <p class="text-fine-muted font-light leading-relaxed" data-translate="diff-desc">
+                    Temos a convicção de que você deseja ver sua história contada de forma única. Nós quebramos o padrão clássico e monótono de gravação.
+                </p>
+            </div>
+            
+            <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Diff 1 -->
+                <div class="bg-fine-surface border border-fine-border p-8 rounded-xl space-y-3 shadow-xl hover:border-brand-green/50 transition duration-300 hover-card-lift">
+                    <span class="text-gold text-2xl"><i class="fa-solid fa-film"></i></span>
+                    <h3 class="font-serif text-lg text-fine-text font-semibold" data-translate="diff1-title">Sem Poses Forçadas</h3>
+                    <p class="text-fine-muted font-light text-sm mt-2 leading-relaxed" data-translate="diff1-desc">
+                        Nós conduzimos o dia de forma leve, permitindo que as risadas genuínas e abraços sinceros surjam de forma natural. Nada de poses desconfortáveis.
+                    </p>
+                </div>
+
+                <!-- Diff 2 -->
+                <div class="bg-fine-surface border border-fine-border p-8 rounded-xl space-y-3 shadow-xl hover:border-brand-green/50 transition duration-300 hover-card-lift">
+                    <span class="text-gold text-2xl"><i class="fa-solid fa-camera-retro"></i></span>
+                    <h3 class="font-serif text-lg text-fine-text font-semibold" data-translate="diff3-title">Tecnologia de Última Geração</h3>
+                    <p class="text-fine-muted font-light text-sm mt-2 leading-relaxed" data-translate="diff3-desc">
+                        Utilizamos câmeras de cinema e sistemas ópticos de última geração. Isso elimina a necessidade de holofotes invasivos e estruturas pesadas, preservando o design de luz real do ambiente.
+                    </p>
+                </div>
+
+                <!-- Diff 3 -->
+                <div class="bg-fine-surface border border-fine-border p-8 rounded-xl space-y-3 shadow-xl hover:border-brand-green/50 transition duration-300 hover-card-lift">
+                    <span class="text-gold text-2xl"><i class="fa-solid fa-music"></i></span>
+                    <h3 class="font-serif text-lg text-fine-text font-semibold" data-translate="diff2-title">Identidade Sonora Livre</h3>
+                    <p class="text-fine-muted font-light text-sm mt-2 leading-relaxed" data-translate="diff2-desc">
+                        Evitamos trilhas sonoras clichês. Escolhemos cada trilha em harmonia com os noivos, garantindo total liberdade criativa para a edição cinematográfica dos filmes longos.
+                    </p>
+                </div>
+
+                <!-- Diff 4 -->
+                <div class="bg-fine-surface border border-fine-border p-8 rounded-xl space-y-3 shadow-xl hover:border-brand-green/50 transition duration-300 hover-card-lift">
+                    <span class="text-gold text-2xl"><i class="fa-solid fa-earth-americas"></i></span>
+                    <h3 class="font-serif text-lg text-fine-text font-semibold" data-translate="diff4-title">Logística Global</h3>
+                    <p class="text-fine-muted font-light text-sm mt-2 leading-relaxed" data-translate="diff4-desc">
+                        Nossa linguagem é global. Temos experiência consolidada em filmagens internacionais em diversos países e estamos preparados com passaportes em mãos para cobrir seu Destination Wedding com perfeição.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEPOIMENTOS DE NOIVAS -->
+    <section class="py-16 md:py-28 bg-fine-surface border-y border-fine-border/80">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 space-y-4">
+                <span class="text-gold uppercase tracking-[0.2em] text-xs font-semibold block" data-translate="review-badge">Depoimentos</span>
+                <h2 class="font-serif text-3xl md:text-5xl text-fine-text font-normal" data-translate="review-title">O Relato de Quem Já Viveu</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-brand-greenDark/30 border border-brand-green/20 p-8 rounded-xl flex flex-col justify-between shadow-2xl hover:border-gold/35 transition duration-350">
+                    <div class="space-y-4">
+                        <div class="flex text-gold gap-1">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-fine-muted font-light italic text-sm leading-relaxed" data-translate="review1-text">
+                            "A melhor escolha do nosso casamento. A equipe nos deixou incrivelmente à vontade durante a filmagem. Quando recebemos o filme, choramos tudo de novo. Parece um filme de cinema!"
+                        </p>
+                    </div>
+                    <div class="mt-6 border-t border-brand-green/30 pt-4">
+                        <p class="text-fine-text text-sm font-semibold">Mariana & Gustavo</p>
+                        <p class="text-gold text-xs uppercase tracking-widest mt-1" data-translate="review1-loc">Casamento na Praia</p>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-brand-greenDark/30 border border-brand-green/20 p-8 rounded-xl flex flex-col justify-between shadow-2xl hover:border-gold/35 transition duration-350">
+                    <div class="space-y-4">
+                        <div class="flex text-gold gap-1">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-fine-muted font-light italic text-sm leading-relaxed" data-translate="review2-text">
+                            "Estávamos com receio de ficar travados na hora, mas com a equipe a energia foi super leve. Eles capturaram detalhes que nem nos demos conta no dia. Trabalho sensacional e impecável."
+                        </p>
+                    </div>
+                    <div class="mt-6 border-t border-brand-green/30 pt-4">
+                        <p class="text-fine-text text-sm font-semibold">Fernanda & Thomas</p>
+                        <p class="text-gold text-xs uppercase tracking-widest mt-1" data-translate="review2-loc">Casamento no Campo</p>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="bg-brand-greenDark/30 border border-brand-green/20 p-8 rounded-xl flex flex-col justify-between shadow-2xl hover:border-gold/35 transition duration-350">
+                    <div class="space-y-4">
+                        <div class="flex text-gold gap-1">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-fine-muted font-light italic text-sm leading-relaxed" data-translate="review3-text">
+                            "Ficamos apaixonados pela sensibilidade artística. O filme tem ritmo, não cansa, os amigos adoraram ver e a edição de cores ficou simplesmente maravilhosa. Valeu cada centavo."
+                        </p>
+                    </div>
+                    <div class="mt-6 border-t border-brand-green/30 pt-4">
+                        <p class="text-fine-text text-sm font-semibold">Camila & Pedro</p>
+                        <p class="text-gold text-xs uppercase tracking-widest mt-1" data-translate="review3-loc">Casamento Clássico</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-16 md:py-28 max-w-4xl mx-auto px-6 scroll-mt-24">
+        <div class="text-center mb-16 space-y-4">
+            <span class="text-gold uppercase tracking-[0.2em] text-xs font-semibold block" data-translate="faq-badge">Dúvidas Frequentes</span>
+            <h2 class="font-serif text-3xl md:text-5xl text-fine-text font-normal" data-translate="faq-title">Perguntas Que Sempre Nos Fazem</h2>
+        </div>
+
+        <div class="space-y-4">
+            <!-- FAQ 5 -->
+            <div class="bg-fine-surface border border-fine-border rounded-xl overflow-hidden shadow-xl hover:border-gold/20 transition duration-300">
+                <button onclick="toggleFaq(5)" class="w-full text-left p-6 font-semibold flex justify-between items-center text-fine-text hover:text-gold transition focus:outline-none">
+                    <span data-translate="faq5-q">Vocês fazem algum tipo de roteiro ou alinhamento com o casal?</span>
+                    <i id="faq-icon-5" class="fa-solid fa-plus text-gold"></i>
+                </button>
+                <div id="faq-ans-5" class="hidden p-6 pt-0 text-fine-muted font-light text-sm border-t border-fine-border/40 leading-relaxed space-y-2" data-translate="faq5-a">
+                    <p>Com certeza! Nós não acreditamos em fórmulas prontas. Por isso, realizamos uma reunião de alinhamento estético e conexão profunda semanas antes do casamento.</p>
+                    <p>Conversamos sobre as expectativas de vocês, os momentos mais importantes, o perfil dos convidados e os detalhes visuais. Esse tratamento especial e sob medida é o que garante que o filme final seja uma verdadeira obra de arte documental, refletindo a alma do casal sem nenhuma interferência artificial no dia.</p>
+                </div>
+            </div>
+
+            <!-- FAQ 1 -->
+            <div class="bg-fine-surface border border-fine-border rounded-xl overflow-hidden shadow-xl hover:border-gold/20 transition duration-300">
+                <button onclick="toggleFaq(1)" class="w-full text-left p-6 font-semibold flex justify-between items-center text-fine-text hover:text-gold transition focus:outline-none">
+                    <span data-translate="faq1-q">Vocês viajam para outros estados ou países?</span>
+                    <i id="faq-icon-1" class="fa-solid fa-plus text-gold"></i>
+                </button>
+                <div id="faq-ans-1" class="hidden p-6 pt-0 text-fine-muted font-light text-sm border-t border-fine-border/40 leading-relaxed" data-translate="faq1-a">
+                    Sim! Nós amamos viajar. Nossa base principal é no Espírito Santo e São Paulo, mas já cobrimos casamentos de norte a sul do Brasil e na Europa. Temos uma logística de viagem robusta e estruturada para dar total segurança aos noivos.
+                </div>
+            </div>
+
+            <!-- FAQ 2 -->
+            <div class="bg-fine-surface border border-fine-border rounded-xl overflow-hidden shadow-xl hover:border-gold/20 transition duration-300">
+                <button onclick="toggleFaq(2)" class="w-full text-left p-6 font-semibold flex justify-between items-center text-fine-text hover:text-gold transition focus:outline-none">
+                    <span data-translate="faq2-q">Qual o prazo de entrega do filme final?</span>
+                    <i id="faq-icon-2" class="fa-solid fa-plus text-gold"></i>
+                </button>
+                <div id="faq-ans-2" class="hidden p-6 pt-0 text-fine-muted font-light text-sm border-t border-fine-border/40 leading-relaxed" data-translate="faq2-a">
+                    Trabalhamos com um prazo dedicado para garantir que a colorização, o desenho de som e a montagem do ritmo fiquem de altíssimo nível. Geralmente, o prazo é de até 60 dias úteis após o evento, mas enviamos prévias (teasers) antes!
+                </div>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="bg-fine-surface border border-fine-border rounded-xl overflow-hidden shadow-xl hover:border-gold/20 transition duration-300">
+                <button onclick="toggleFaq(3)" class="w-full text-left p-6 font-semibold flex justify-between items-center text-fine-text hover:text-gold transition focus:outline-none">
+                    <span data-translate="faq3-q">Quantas pessoas estarão trabalhando no dia?</span>
+                    <i id="faq-icon-3" class="fa-solid fa-plus text-gold"></i>
+                </button>
+                <div id="faq-ans-3" class="hidden p-6 pt-0 text-fine-muted font-light text-sm border-t border-fine-border/40 leading-relaxed" data-translate="faq3-a">
+                    Isso varia de acordo com o plano contratado (de 1 a 3 filmmakers). Nossa equipe atua de forma sincronizada, elegante e silenciosa para capturar todos os melhores ângulos de maneira totalmente invisível.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO DE PLANOS / PACOTES -->
+    <section id="planos" class="py-16 md:py-28 bg-fine-surface border-y border-fine-border/80 scroll-mt-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 space-y-4">
+                <span class="text-gold uppercase tracking-[0.2em] text-xs font-semibold block" data-translate="plans-badge">Investimento</span>
+                <h2 class="font-serif text-3xl md:text-5xl text-fine-text font-normal" data-translate="plans-title">Nossos Pacotes</h2>
+                <p class="text-fine-muted max-w-xl mx-auto font-light text-sm" data-translate="plans-desc">Escolha a cobertura que melhor se adapta à complexidade e magnitude do seu grande dia.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
+                <!-- Ouro / Gold -->
+                <div class="bg-fine-bg border border-fine-border p-8 rounded-3xl flex flex-col justify-between shadow-2xl hover:border-gold/30 transition duration-300 relative group hover-card-lift">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-serif text-2xl text-fine-text" data-translate="p-ouro-title">Ouro</h3>
+                            <span class="text-[10px] uppercase tracking-widest bg-fine-surface border border-fine-border px-3 py-1 rounded-full text-fine-muted" data-translate="p-ouro-badge">Classic</span>
+                        </div>
+                        <p class="text-xs text-fine-muted font-light leading-relaxed" id="p-ouro-summary-card">Ideal para casamentos intimistas de cobertura essencial.</p>
+                    </div>
+                    <div class="mt-8">
+                        <button onclick="openPlanModal('ouro')" class="w-full text-center py-3.5 bg-brand-green/30 hover:bg-brand-green text-fine-text border border-brand-greenLight/50 hover:border-gold/40 rounded-full text-xs uppercase tracking-widest font-semibold transition duration-300" data-translate="btn-details">Ver Detalhes</button>
+                    </div>
+                </div>
+
+                <!-- Diamante / Diamond -->
+                <div class="bg-brand-green/20 border-2 border-gold p-8 rounded-3xl flex flex-col justify-between shadow-2xl hover:border-gold transition duration-300 relative group scale-105 transform hover-card-lift">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gold text-fine-bg text-[10px] uppercase tracking-[0.2em] font-semibold px-4 py-1.5 rounded-full" data-translate="p-popular">Mais Procurado</div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-serif text-2xl text-fine-text" data-translate="p-diamante-title">Diamante</h3>
+                            <span class="text-[10px] uppercase tracking-widest bg-gold/10 border border-gold/30 px-3 py-1 rounded-full text-gold font-semibold" data-translate="p-diamante-badge">Elite</span>
+                        </div>
+                        <p class="text-xs text-fine-muted font-light leading-relaxed" id="p-diamante-summary-card">A cobertura ideal completa com equipe ampliada e teasers.</p>
+                    </div>
+                    <div class="mt-8">
+                        <button onclick="openPlanModal('diamante')" class="w-full text-center py-3.5 bg-gold hover:bg-gold-dark text-white rounded-full text-xs uppercase tracking-widest font-semibold transition duration-300 shadow-lg shadow-gold/20" data-translate="btn-details">Ver Detalhes</button>
+                    </div>
+                </div>
+
+                <!-- Platinum -->
+                <div class="bg-fine-bg border border-fine-border p-8 rounded-3xl flex flex-col justify-between shadow-2xl hover:border-gold/30 transition duration-300 relative group hover-card-lift">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-serif text-2xl text-fine-text" data-translate="p-platinum-title">Platinum</h3>
+                            <span class="text-[10px] uppercase tracking-widest bg-fine-surface border border-fine-border px-3 py-1 rounded-full text-fine-muted" data-translate="p-platinum-badge">Exclusivo</span>
+                        </div>
+                        <p class="text-xs text-fine-muted font-light leading-relaxed" id="p-platinum-summary-card">A experiência máxima e imersiva sem limites de entrega.</p>
+                    </div>
+                    <div class="mt-8">
+                        <button onclick="openPlanModal('platinum')" class="w-full text-center py-3.5 bg-brand-green/30 hover:bg-brand-green text-fine-text border border-brand-greenLight/50 hover:border-gold/40 rounded-full text-xs uppercase tracking-widest font-semibold transition duration-300" data-translate="btn-details">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMULÁRIO DE CONTATO -->
+    <section id="proposta" class="py-16 md:py-28 bg-fine-surface border-t border-fine-border scroll-mt-24">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="text-center mb-12 space-y-4">
+                <span class="text-gold uppercase tracking-[0.2em] text-xs font-semibold block" data-translate="form-badge">Consulte sua data</span>
+                <h2 class="font-serif text-3xl md:text-5xl text-fine-text font-normal" data-translate="form-title">Fale Conosco</h2>
+                <p class="text-fine-muted font-light text-sm" data-translate="form-desc">
+                    Preencha os detalhes do seu grande dia para receber nossa proposta exclusiva e verificar se temos a data livre.
+                </p>
+            </div>
+
+            <form class="bg-fine-bg border border-fine-border p-8 rounded-2xl space-y-6 shadow-2xl focus-within:border-gold/30 transition-colors duration-500">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-fine-muted font-medium mb-2" data-translate="input-name">Nome do Casal</label>
+                        <input type="text" id="form-name" required placeholder="Ex: Maria & João" class="w-full bg-fine-surface border border-fine-border focus:border-gold focus:outline-none text-fine-text px-4 py-3 rounded-lg text-sm transition duration-300">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-fine-muted font-medium mb-2" data-translate="input-email">E-mail de Contato</label>
+                        <input type="email" id="form-email" required placeholder="Ex: maria@email.com" class="w-full bg-fine-surface border border-fine-border focus:border-gold focus:outline-none text-fine-text px-4 py-3 rounded-lg text-sm transition duration-300">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-fine-muted font-medium mb-2" data-translate="input-date">Data Estimada</label>
+                        <input type="date" id="form-date" required class="w-full bg-fine-surface border border-fine-border focus:border-gold focus:outline-none text-fine-text px-4 py-3 rounded-lg text-sm transition duration-300">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-fine-muted font-medium mb-2" data-translate="input-location">Local / Cidade do Casamento</label>
+                        <input type="text" id="form-location" required placeholder="Ex: Palácio Tangará, São Paulo" class="w-full bg-fine-surface border border-fine-border focus:border-gold focus:outline-none text-fine-text px-4 py-3 rounded-lg text-sm transition duration-300">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-fine-muted font-medium mb-2" data-translate="input-style">Estilo do Evento</label>
+                        <select id="form-style" class="w-full bg-fine-surface border border-fine-border focus:border-gold focus:outline-none text-fine-text px-4 py-3 rounded-lg text-sm transition duration-300 cursor-pointer">
+                            <option value="Clássico" data-translate="opt-1">Clássico / Igreja / Salão</option>
+                            <option value="Campo" data-translate="opt-2">Campo / Fazenda</option>
+                            <option value="Praia" data-translate="opt-3">Pé na Areia / Praia</option>
+                            <option value="Destination" data-translate="opt-4">Destination Wedding (Fora do Estado/País)</option>
+                            <option value="Elopement" data-translate="opt-5">Elopement Wedding / Intimista</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-fine-muted font-medium mb-2" data-translate="input-venue">Local exato & Instagram do espaço</label>
+                        <input type="text" id="form-venue" placeholder="Ex: Capela dos Milagres (@capeladosmilagres)" class="w-full bg-fine-surface border border-fine-border focus:border-gold focus:outline-none text-fine-text px-4 py-3 rounded-lg text-sm transition duration-300">
+                    </div>
+                </div>
+
+                <!-- Campo de Interesse com botão de atalho ampliado e de alto destaque -->
+                <div class="space-y-2">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <label class="block text-xs uppercase tracking-widest text-fine-muted font-medium" data-translate="input-plan">Coleção de Interesse</label>
+                        <button type="button" onclick="scrollToSection(null, '#planos')" class="text-xs text-gold hover:text-white border border-gold/50 hover:border-gold px-4 py-2 rounded-full bg-gold/10 hover:bg-gold transition-all duration-300 font-semibold tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-gold/5 touch-manipulation">
+                            <i class="fa-solid fa-receipt text-xs"></i> <span data-translate="label-plan-details-shortcut">Ver Detalhes dos Pacotes</span>
+                        </button>
+                    </div>
+                    <select id="form-plan" required class="w-full bg-fine-surface border border-fine-border focus:border-gold focus:outline-none text-fine-text px-4 py-3 rounded-lg text-sm transition duration-300 cursor-pointer">
+                        <option value="ouro" id="opt-plan-ouro" data-translate="opt-plan-ouro">Coleção Ouro</option>
+                        <option value="diamante" id="opt-plan-diamante" selected data-translate="opt-plan-diamante">Coleção Diamante</option>
+                        <option value="platinum" id="opt-plan-platinum" data-translate="opt-plan-platinum">Coleção Platinum</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-fine-muted font-medium mb-2" data-translate="input-details">Conte-nos um pouco sobre os seus planos</label>
+                    <textarea id="form-message" rows="4" placeholder="Adoramos saber detalhes! O estilo do casamento, se haverá festa externa, quantidade de convidados..." class="w-full bg-fine-surface border border-fine-border focus:border-gold focus:outline-none text-fine-text px-4 py-3 rounded-lg text-sm transition duration-300"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-gold hover:bg-gold-dark text-white font-semibold text-xs uppercase tracking-[0.2em] rounded-full transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-gold/10">
+                    <i class="fa-brands fa-whatsapp text-base"></i> <span data-translate="btn-submit">Enviar Proposta</span>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="relative py-28 bg-fine-bg border-t border-fine-border">
+        <div class="absolute inset-0 z-0 bg-cover bg-center opacity-[0.04] filter grayscale" style="background-image: url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1920&auto=format&fit=crop');"></div>
+        <div class="absolute inset-0 bg-gradient-to-tr from-brand-greenDark via-fine-bg to-brand-greenDark/40 z-0"></div>
+        
+        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center space-y-6">
+            <span class="text-gold uppercase tracking-[0.2em] text-xs font-semibold block" data-translate="cta-badge">Vagas Limitadas</span>
+            <h2 class="font-serif text-3xl md:text-6xl text-fine-text font-normal" data-translate="cta-title">Vamos criar seu filme inesquecível?</h2>
+            <p class="text-fine-muted max-w-lg mx-auto font-light text-sm md:text-base leading-relaxed" data-translate="cta-desc">
+                As datas mais concorridas do ano costumam preencher com muitos meses de antecedência. Preserve a sua memória da forma que ela merece.
+            </p>
+            <div class="pt-6">
+                <a href="#proposta" onclick="scrollToSection(event, '#proposta')" class="inline-flex items-center gap-3 border border-gold hover:bg-gold hover:text-white text-gold px-8 py-5 rounded-full font-semibold text-xs uppercase tracking-[0.2em] transition duration-300 shadow-xl">
+                    <i class="fa-regular fa-envelope text-lg"></i> <span data-translate="cta-btn">Iniciar Orçamento Oficial</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-fine-surface py-12 border-t border-fine-border text-center text-fine-muted text-xs">
+        <div class="max-w-7xl mx-auto px-6 space-y-4 relative">
+            <p class="font-serif text-lg tracking-widest text-fine-text">PH<span class="text-gold font-light">FILME</span></p>
+            <p class="font-light">© 2026 PHFILME. <span data-translate="footer-rights">Todos os direitos reservados. Brasil.</span></p>
+            <p class="text-[10px] text-[#5e584f] font-light flex items-center justify-center gap-1">
+                <span data-translate="footer-dev">Desenvolvido com sofisticação responsiva.</span> 
+                <a href="admin.html" class="text-fine-muted/40 hover:text-gold transition-colors ml-1" title="Painel de Administração">
+                    <i class="fa-solid fa-lock text-[9px]"></i>
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE PLANS MODAL -->
+    <div id="plan-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-fine-surface border border-fine-border w-full max-w-lg rounded-3xl p-6 md:p-8 relative shadow-2xl scale-95 transition-transform duration-300 overflow-y-auto max-h-[90vh]">
+            <button onclick="closePlanModal()" class="absolute top-5 right-5 text-fine-muted hover:text-white text-2xl focus:outline-none transition z-10">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Gold / Ouro Content -->
+            <div id="plan-content-ouro" class="hidden space-y-6">
+                <div class="flex justify-between items-center border-b border-fine-border pb-4">
+                    <h3 class="font-serif text-3xl text-fine-text" data-translate="p-ouro-title">Ouro</h3>
+                    <span class="text-xs uppercase tracking-widest bg-brand-green/30 px-3 py-1 rounded-full text-gold font-semibold" data-translate="p-ouro-badge">Classic</span>
+                </div>
+                <p id="p-ouro-desc-long" class="text-sm text-fine-muted font-light leading-relaxed">Carregando...</p>
+                <div class="space-y-3.5">
+                    <h4 class="text-xs uppercase tracking-wider text-gold font-semibold" data-translate="modal-include-title">O que está incluso:</h4>
+                    <ul id="p-ouro-items-list" class="space-y-2 text-sm text-fine-muted font-light">
+                        <!-- Rendered dynamically -->
+                    </ul>
+                </div>
+                <div class="border-t border-fine-border pt-6 space-y-4">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-wider text-fine-muted" data-translate="investment-lbl">Investimento</p>
+                        <p class="font-serif text-3xl text-gold font-normal mt-1" id="p-ouro-price-el">--</p>
+                        <p class="text-[10px] text-fine-muted/60 mt-1" data-translate="costs-included">*custos logísticos serão definidos sob consulta</p>
+                    </div>
+                    <button onclick="selectPlanAndScroll('Ouro')" class="w-full py-4 bg-gold hover:bg-gold-dark text-white font-semibold text-xs uppercase tracking-[0.2em] rounded-full transition-all duration-300 text-center block shadow-lg shadow-gold/10" data-translate="btn-select-plan">Consultar Disponibilidade Desta Coleção</button>
+                </div>
+            </div>
+
+            <!-- Diamond / Diamante Content -->
+            <div id="plan-content-diamante" class="hidden space-y-6">
+                <div class="flex justify-between items-center border-b border-fine-border pb-4">
+                    <h3 class="font-serif text-3xl text-fine-text" data-translate="p-diamante-title">Diamante</h3>
+                    <span class="text-xs uppercase tracking-widest bg-gold/10 border border-gold/30 px-3 py-1 rounded-full text-gold font-semibold" data-translate="p-diamante-badge">Elite</span>
+                </div>
+                <p id="p-diamante-desc-long" class="text-sm text-fine-muted font-light leading-relaxed">Carregando...</p>
+                <div class="space-y-3.5">
+                    <h4 class="text-xs uppercase tracking-wider text-gold font-semibold" data-translate="modal-include-title">O que está incluso:</h4>
+                    <ul id="p-diamante-items-list" class="space-y-2 text-sm text-fine-muted font-light">
+                        <!-- Rendered dynamically -->
+                    </ul>
+                </div>
+                <div class="border-t border-fine-border pt-6 space-y-4">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-wider text-fine-muted" data-translate="investment-lbl">Investimento</p>
+                        <p class="font-serif text-3xl text-gold font-semibold mt-1" id="p-diamante-price-el">--</p>
+                        <p class="text-[10px] text-fine-muted/60 mt-1" data-translate="costs-included">*custos logísticos serão definidos sob consulta</p>
+                    </div>
+                    <button onclick="selectPlanAndScroll('Diamante')" class="w-full py-4 bg-gold hover:bg-gold-dark text-white font-semibold text-xs uppercase tracking-[0.2em] rounded-full transition-all duration-300 text-center block shadow-lg shadow-gold/10" data-translate="btn-select-plan">Consultar Disponibilidade Desta Coleção</button>
+                </div>
+            </div>
+
+            <!-- Platinum Content -->
+            <div id="plan-content-platinum" class="hidden space-y-6">
+                <div class="flex justify-between items-center border-b border-fine-border pb-4">
+                    <h3 class="font-serif text-3xl text-fine-text" data-translate="p-platinum-title">Platinum</h3>
+                    <span class="text-xs uppercase tracking-widest bg-brand-green/40 px-3 py-1 rounded-full text-gold font-semibold" data-translate="p-platinum-badge">Exclusivo</span>
+                </div>
+                <p id="p-platinum-desc-long" class="text-sm text-fine-muted font-light leading-relaxed">Carregando...</p>
+                <div class="space-y-3.5">
+                    <h4 class="text-xs uppercase tracking-wider text-gold font-semibold" data-translate="modal-include-title">O que está incluso:</h4>
+                    <ul id="p-platinum-items-list" class="space-y-2 text-sm text-fine-muted font-light">
+                        <!-- Rendered dynamically -->
+                    </ul>
+                </div>
+                <div class="border-t border-fine-border pt-6 space-y-4">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-wider text-fine-muted" data-translate="investment-lbl">Investimento</p>
+                        <p class="font-serif text-3xl text-gold font-normal mt-1" id="p-platinum-price-el">--</p>
+                        <p class="text-[10px] text-fine-muted/60 mt-1" data-translate="costs-included">*custos logísticos serão definidos sob consulta</p>
+                    </div>
+                    <button onclick="selectPlanAndScroll('Platinum')" class="w-full py-4 bg-gold hover:bg-gold-dark text-white font-semibold text-xs uppercase tracking-[0.2em] rounded-full transition-all duration-300 text-center block shadow-lg shadow-gold/10" data-translate="btn-select-plan">Consultar Disponibilidade Desta Coleção</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIDEO MODAL CONTAINER -->
+    <div id="video-modal" class="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4 md:p-8 hidden opacity-0 transition-opacity duration-300">
+        <button onclick="closeVideoModal()" class="absolute top-6 right-6 text-white hover:text-gold text-3xl focus:outline-none transition z-50">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div id="video-modal-content" class="w-full max-w-5xl aspect-video rounded-lg overflow-hidden shadow-2xl border border-white/10 relative bg-black">
+            <video id="modal-video-player" class="w-full h-full object-contain" controls autoplay playsinline></video>
+        </div>
+    </div>
+
+    <!-- FLOATING WHATSAPP BUTTON -->
+    <a href="https://wa.me/5511919432604?text=Olá, gostaria de falar sobre os filmes de casamento!" id="whatsapp-float" target="_blank" class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-2xl hover:scale-110 transition duration-300">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- Main Client JS Application as module -->
+    <script type="module" src="js/app.js?v=3"></script>
+</body>
+</html>
