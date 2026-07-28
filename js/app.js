@@ -63,6 +63,10 @@ const translations = {
         "portfolio-title": "Confira abaixo as histórias que já contamos",
         "portfolio-desc": "Uma sutil curadoria das emoções e destinos incríveis que já tivemos a honra de registrar.",
         "portfolio-btn": "Ver Mais Filmes No YouTube",
+        "vimeo-badge": "Produção Própria",
+        "vimeo-title": "Vídeos produzidos pela nossa equipe",
+        "vimeo-desc": "Cada filmmaker da nossa equipe foi selecionado a dedo e treinado ao longo dos anos para compartilhar da mesma visão, sensibilidade e linguagem cinematográfica que definem o nosso trabalho.",
+        "vimeo-btn": "Acessar Vitrine Completa no Vimeo",
         "diff-badge": "Nossa Essência",
         "diff-title": "Como criamos sem clichês",
         "diff-desc": "Temos a convicção de que você deseja ver sua história contada de forma única. Nós quebramos o padrão clássico e monótono de gravação.",
@@ -178,6 +182,10 @@ const translations = {
         "portfolio-title": "Check out some of the stories we've told below",
         "portfolio-desc": "A subtle curation of the emotions and amazing destination weddings we have had the honor to capture.",
         "portfolio-btn": "Watch More on YouTube",
+        "vimeo-badge": "In-House Production",
+        "vimeo-title": "Videos produced by our team",
+        "vimeo-desc": "Every filmmaker on our team was hand-picked and trained over the years to share the same vision, sensitivity, and cinematic language that define our work.",
+        "vimeo-btn": "View Full Showcase on Vimeo",
         "diff-badge": "Our Essence",
         "diff-title": "Crafting without Clichés",
         "diff-desc": "We believe your story deserves to be told in a unique way. We break the classic, monotonous shooting template.",
@@ -293,6 +301,10 @@ const translations = {
         "portfolio-title": "Mira a continuación las historias que ya hemos contado",
         "portfolio-desc": "Una sutil curaduría de las emociones e destinos increíbles que hemos tenido el honor de registrar.",
         "portfolio-btn": "Ver Más Películas En YouTube",
+        "vimeo-badge": "Producción Propia",
+        "vimeo-title": "Videos producidos por nuestro equipo",
+        "vimeo-desc": "Cada filmmaker de nuestro equipo fue seleccionado a mano y entrenado a lo largo de los años para compartir la misma visión, sensibilidad y lenguaje cinematográfico que definen nuestro trabajo.",
+        "vimeo-btn": "Ver Vitrina Completa en Vimeo",
         "diff-badge": "Nossa Essência",
         "diff-title": "Cómo creamos sin clichés",
         "diff-desc": "Tenemos la convicción de que deseas ver tu historia contada de forma única. Rompemos el patrón clásico de filmación.",
@@ -408,6 +420,10 @@ const translations = {
         "portfolio-title": "Scopri qui sotto le storie che abbiamo raccontato",
         "portfolio-desc": "Una raffinata selezione delle emozioni e delle splendide mete che abbiamo avuto l'onore di immortalare.",
         "portfolio-btn": "Guarda Altri Video Su YouTube",
+        "vimeo-badge": "Produzione Interna",
+        "vimeo-title": "Video prodotti dal nostro team",
+        "vimeo-desc": "Ogni filmmaker del nostro team è stato selezionato a mano e formato nel corso degli anni per condividere la stessa visione, sensibilità e linguaggio cinematografico che definiscono il nostro lavoro.",
+        "vimeo-btn": "Visualizza la Vetrina Completa su Vimeo",
         "diff-badge": "La Nostra Essenza",
         "diff-title": "Come creiamo sem clichê",
         "diff-desc": "Siamo convinti che desideriate vedere il vostro giorno raccontato in modo unico, lontano da schemi rigidi.",
@@ -476,6 +492,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadAllDynamicContent();
     setupProposalForm();
     forceAutoplay();
+    loadVimeoShowcase();
 });
 
 // 1. Scroll Progress Bar
@@ -1056,3 +1073,143 @@ function updateHeroBackground(videoUrl, opacity) {
         }
     }
 }
+
+// 7. Vimeo Showcase Loader
+// Uses PHP proxy to fetch video IDs (avoids CORS), then oEmbed API for thumbnails/titles
+const VIMEO_SHOWCASE_ID = '12345001';
+
+async function loadVimeoShowcase() {
+    const grid = document.getElementById('vimeo-showcase-grid');
+    if (!grid) return;
+
+    try {
+        // Step 1: Fetch video IDs from our PHP proxy
+        const proxyResponse = await fetch('./vimeo-proxy.php');
+        
+        let videoIds = [];
+        
+        if (proxyResponse.ok) {
+            const proxyData = await proxyResponse.json();
+            if (proxyData.success && proxyData.videos.length > 0) {
+                videoIds = proxyData.videos;
+            }
+        }
+        
+        // If proxy failed or returned no videos, use the showcase embed fallback
+        if (videoIds.length === 0) {
+            grid.innerHTML = `
+                <div class="col-span-full">
+                    <div class="aspect-video rounded-xl overflow-hidden border border-fine-border shadow-xl">
+                        <iframe src="https://vimeo.com/showcase/${VIMEO_SHOWCASE_ID}/embed" 
+                            class="w-full h-full" 
+                            frameborder="0" 
+                            allow="autoplay; fullscreen; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        // Step 2: Fetch oEmbed data for each video (oEmbed supports CORS)
+        const videoPromises = videoIds.map(async (videoId) => {
+            try {
+                const url = `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${videoId}&width=640`;
+                const response = await fetch(url);
+                if (!response.ok) return null;
+                const data = await response.json();
+                return { id: videoId, ...data };
+            } catch {
+                return null;
+            }
+        });
+
+        const videos = (await Promise.all(videoPromises)).filter(v => v !== null);
+
+        if (videos.length === 0) {
+            // Fallback to showcase embed
+            grid.innerHTML = `
+                <div class="col-span-full">
+                    <div class="aspect-video rounded-xl overflow-hidden border border-fine-border shadow-xl">
+                        <iframe src="https://vimeo.com/showcase/${VIMEO_SHOWCASE_ID}/embed" 
+                            class="w-full h-full" 
+                            frameborder="0" 
+                            allow="autoplay; fullscreen; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        // Step 3: Render individual video cards
+        grid.innerHTML = '';
+        videos.forEach(video => {
+            const card = document.createElement('div');
+            card.className = "bg-brand-greenDark/40 rounded-xl overflow-hidden border border-brand-green/30 hover:border-gold/50 shadow-2xl transition duration-300 group hover-card-lift cursor-pointer";
+            
+            // Use higher quality thumbnail
+            const thumbUrl = video.thumbnail_url ? video.thumbnail_url.replace(/_\d+x\d+/, '_640x360') : '';
+            
+            card.innerHTML = `
+                <div class="relative aspect-video bg-fine-bg overflow-hidden" onclick="openVimeoVideoModal('${video.id}')">
+                    <img src="${thumbUrl || video.thumbnail_url}" 
+                         class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition duration-500" 
+                         alt="${video.title || ''}"
+                         onerror="this.src='https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=640';">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/55 transition duration-300">
+                        <span class="w-14 h-14 bg-brand-green text-fine-text border border-white/10 rounded-full flex items-center justify-center text-xl shadow-lg shadow-brand-green/50 group-hover:bg-gold group-hover:scale-110 transition duration-300">
+                            <i class="fa-solid fa-play ml-1"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="p-5">
+                    <span class="text-xs uppercase tracking-widest text-gold font-semibold mb-1 block">
+                        <i class="fa-brands fa-vimeo-v mr-1.5"></i>${video.author_name || 'PHFILME'}
+                    </span>
+                    <h4 class="font-serif text-lg text-fine-text">${video.title || 'Sem título'}</h4>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error('Error loading Vimeo showcase:', err);
+        // Fallback: embed the full showcase player on error
+        grid.innerHTML = `
+            <div class="col-span-full">
+                <div class="aspect-video rounded-xl overflow-hidden border border-fine-border shadow-xl">
+                    <iframe src="https://vimeo.com/showcase/${VIMEO_SHOWCASE_ID}/embed" 
+                        class="w-full h-full" 
+                        frameborder="0" 
+                        allow="autoplay; fullscreen; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Open Vimeo video in modal
+window.openVimeoVideoModal = (videoId) => {
+    const modal = document.getElementById('video-modal');
+    const videoContainer = document.getElementById('video-modal-content');
+    
+    videoContainer.innerHTML = `
+        <iframe id="modal-video-player" 
+            src="https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0&color=C8A97E" 
+            class="w-full h-full rounded-lg"
+            frameborder="0" 
+            allow="autoplay; fullscreen; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+    `;
+
+    modal.classList.remove('hidden');
+    setTimeout(() => { modal.classList.remove('opacity-0'); }, 50);
+};
+
+
