@@ -647,11 +647,10 @@ function reRenderDynamicTexts() {
             title27El.textContent = localAgenda.year2027Title || translations[currentLang]["scarcity-2027"];
         }
 
-        // Render Custom Background Video & Opacity (Supports MP4 & YouTube links)
-        const defaultVideo = "https://phfilme.com.br/videos/video_ph.mp4";
-        const videoUrl = localAgenda && localAgenda.bgVideoUrl ? localAgenda.bgVideoUrl : defaultVideo;
+        // Render Background Video (URL fixo — não editável pelo painel)
+        const FIXED_VIDEO_URL = "https://video.wixstatic.com/video/2ee01b_9b4ef7434b854f2c997a6388a3aecff4/1080p/mp4/file.mp4";
         const videoOpacity = localAgenda && localAgenda.hero_bg_opacity !== undefined ? localAgenda.hero_bg_opacity : 50;
-        updateHeroBackground(videoUrl, videoOpacity);
+        updateHeroBackground(FIXED_VIDEO_URL, videoOpacity);
 
         const year26Progress = document.getElementById('progress-bar-2026');
         const year26Label = document.getElementById('label-2026-status');

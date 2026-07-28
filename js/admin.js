@@ -598,7 +598,6 @@ function setupForms() {
                     hero_desc_pt: document.getElementById('set-hero-desc').value,
                     hero_btn_date_pt: document.getElementById('set-hero-btn-date').value,
                     manifesto_text_pt: document.getElementById('set-manifesto-text').value,
-                    bgVideoUrl: document.getElementById('input-bg-video-url').value,
                     hero_bg_opacity: parseInt(document.getElementById('input-hero-bg-opacity').value) || 50,
                     team: team
                 };
@@ -811,7 +810,7 @@ async function loadAgendaTab() {
             document.getElementById('input-agenda-section-title').value = agenda.sectionTitle || "Agenda de Disponibilidade";
             document.getElementById('input-agenda-year-2026-title').value = agenda.year2026Title || "Agenda 2026";
             document.getElementById('input-agenda-year-2027-title').value = agenda.year2027Title || "Agenda 2027";
-            document.getElementById('input-bg-video-url').value = agenda.bgVideoUrl || "https://phfilme.com.br/videos/video_ph.mp4";
+            document.getElementById('input-hero-bg-opacity').value = agenda.hero_bg_opacity || 50;
         }
     } catch (err) {
         console.error("Failed to load agenda tab values:", err);
@@ -882,7 +881,7 @@ async function loadSettingsTab() {
         document.getElementById('set-hero-btn-date').value = settings.hero_btn_date_pt || "Consultar Disponibilidade de Data";
         
         // Background Video URL & Opacity (moved from agenda to settings)
-        document.getElementById('input-bg-video-url').value = settings.bgVideoUrl || "https://phfilme.com.br/videos/video_ph.mp4";
+        document.getElementById('input-hero-bg-opacity').value = settings.hero_bg_opacity || 50;
         const opacityVal = settings.hero_bg_opacity !== undefined ? settings.hero_bg_opacity : 50;
         document.getElementById('input-hero-bg-opacity').value = opacityVal;
         document.getElementById('label-hero-bg-opacity-val').textContent = opacityVal + '%';
