@@ -576,6 +576,37 @@ export async function updateGeneralSettings(settings) {
 }
 
 // =========================================================================
+// VIMEO SETTINGS (visibilidade dos vídeos da vitrine)
+// =========================================================================
+export async function getVimeoSettings() {
+    if (isDemoMode) {
+        return JSON.parse(localStorage.getItem('phfilme_vimeo')) || { visibleIds: [] };
+    } else {
+        try {
+            const docRef = doc(db, 'config', 'vimeo');
+            const snap = await getDoc(docRef);
+            if (snap.exists()) return snap.data();
+            return { visibleIds: [] };
+        } catch (e) {
+            console.error('Firestore error in getVimeoSettings:', e);
+            return { visibleIds: [] };
+        }
+    }
+}
+
+export async function saveVimeoSettings(visibleIds) {
+    const data = { visibleIds };
+    if (isDemoMode) {
+        localStorage.setItem('phfilme_vimeo', JSON.stringify(data));
+        return true;
+    } else {
+        const docRef = doc(db, 'config', 'vimeo');
+        await setDoc(docRef, data);
+        return true;
+    }
+}
+
+// =========================================================================
 // USERS CONFIGURATION
 // =========================================================================
 export async function getUsers() {

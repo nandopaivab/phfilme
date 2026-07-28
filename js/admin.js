@@ -9,7 +9,8 @@ import {
     getAgenda, updateAgenda, getPlans, updatePlan, 
     getPortfolio, savePortfolioFilm, deletePortfolioFilm, 
     getLeads, updateLeadStatus, updateGeneralSettings,
-    getUsers, saveUser, deleteUser
+    getUsers, saveUser, deleteUser,
+    getVimeoSettings, saveVimeoSettings
 } from './data-store.js';
 import { initializeApp, deleteApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
 import { ref, uploadBytesResumable, getDownloadURL, getStorage } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
@@ -189,6 +190,8 @@ window.switchTab = async (tabName) => {
         await loadLeadsTab();
     } else if (tabName === 'portfolio') {
         await loadPortfolioTab();
+    } else if (tabName === 'vimeo') {
+        await loadVimeoTab();
     } else if (tabName === 'plans') {
         await loadPlansTab();
     } else if (tabName === 'agenda') {
@@ -1381,3 +1384,148 @@ window.uploadPortfolioCover = async (event) => {
         if (icon) icon.className = originalClass;
     }
 };
+
+// =========================================================================
+// VIMEO TAB MODULE
+// =========================================================================
+let allVimeoVideos = []; // all videos fetched from proxy
+let visibleVimeoIds = []; // IDs marked as visible (saved setting)
+
+async function loadVimeoTab() {
+    const loadingEl = document.getElementById('vimeo-admin-loading');
+    const gridEl = document.getElementById('vimeo-admin-grid');
+
+    loadingEl.classList.remove('hidden');
+    gridEl.classList.add('hidden');
+
+    try {
+        // Load saved visibility settings from DB
+        const settings = await getVimeoSettings();
+        visibleVimeoIds = settings.visibleIds || [];
+
+        // Fetch all videos from proxy
+        await fetchAndRenderVimeoAdmin();
+    } catch (err) {
+        console.error('Error loading Vimeo tab:', err);
+        loadingEl.innerHTML = `<p class="text-red-400 text-sm">Erro ao carregar vídeos: ${err.message}</p>`;
+    }
+}
+
+window.refreshVimeoVideos = async () => {
+    const btn = document.getElementById('vimeo-refresh-btn');
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Atualizando...';
+    btn.disabled = true;
+    await fetchAndRenderVimeoAdmin();
+    btn.innerHTML = originalHTML;
+    btn.disabled = false;
+};
+
+async function fetchAndRenderVimeoAdmin() {
+    const loadingEl = document.getElementById('vimeo-admin-loading');
+    const gridEl = document.getElementById('vimeo-admin-grid');
+
+    loadingEl.classList.remove('hidden');
+    gridEl.classList.add('hidden');
+
+    try {
+        // Fetch video IDs from PHP proxy
+        const proxyRes = await fetch('./vimeo-proxy.php');
+        if (!proxyRes.ok) throw new Error('Proxy não respondeu');
+        const proxyData = await proxyRes.json();
+
+        if (!proxyData.success || proxyData.videos.length === 0) {
+            loadingEl.innerHTML = `
+                <i class="fa-brands fa-vimeo-v text-3xl text-fine-muted mb-3 block"></i>
+                <p class="text-fine-muted text-sm">Nenhum vídeo encontrado na vitrine do Vimeo.</p>
+                <p class="text-fine-muted/50 text-xs mt-1">Verifique se o arquivo <code>vimeo-proxy.php</code> está no servidor.</p>
+            `;
+            return;
+        }
+
+        // Fetch oEmbed metadata for each video
+        const videoPromises = proxyData.videos.map(async (id) => {
+            try {
+                const res = await fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${id}&width=640`);
+                if (!res.ok) return null;
+                const data = await res.json();
+                return { id, ...data };
+            } catch { return null; }
+        });
+
+        allVimeoVideos = (await Promise.all(videoPromises)).filter(v => v !== null);
+
+        // Render cards
+        gridEl.innerHTML = '';
+        allVimeoVideos.forEach(video => {
+            const isVisible = visibleVimeoIds.length === 0 || visibleVimeoIds.includes(video.id);
+            const thumbUrl = video.thumbnail_url ? video.thumbnail_url.replace(/_\d+x\d+/, '_320x180') : '';
+
+            const card = document.createElement('div');
+            card.className = `relative rounded-xl overflow-hidden border transition duration-200 ${isVisible ? 'border-brand-green/70 bg-brand-greenDark/30' : 'border-fine-border/50 bg-fine-bg opacity-60'}`;
+            card.setAttribute('data-video-id', video.id);
+
+            card.innerHTML = `
+                <div class="aspect-video relative overflow-hidden">
+                    <img src="${thumbUrl}" class="w-full h-full object-cover" alt="${video.title || ''}">
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                        <span class="text-white text-xs font-light px-2 py-1 bg-black/50 rounded-full">${video.id}</span>
+                    </div>
+                </div>
+                <div class="p-3 flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <p class="text-fine-text text-xs font-semibold truncate">${video.title || 'Sem título'}</p>
+                        <p class="text-fine-muted text-[10px] mt-0.5"><i class="fa-brands fa-vimeo-v mr-1"></i>${video.author_name || ''}</p>
+                    </div>
+                    <!-- Toggle Switch -->
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input type="checkbox" class="sr-only peer vimeo-toggle" data-id="${video.id}" ${isVisible ? 'checked' : ''} onchange="onVimeoToggle(this)">
+                        <div class="w-10 h-5 bg-fine-border rounded-full peer peer-checked:bg-brand-green transition duration-200 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+                    </label>
+                </div>
+            `;
+            gridEl.appendChild(card);
+        });
+
+        loadingEl.classList.add('hidden');
+        gridEl.classList.remove('hidden');
+
+    } catch (err) {
+        loadingEl.innerHTML = `<p class="text-red-400 text-sm">Erro: ${err.message}</p>`;
+    }
+}
+
+window.onVimeoToggle = (checkbox) => {
+    const card = checkbox.closest('[data-video-id]');
+    if (checkbox.checked) {
+        card.classList.remove('border-fine-border/50', 'bg-fine-bg', 'opacity-60');
+        card.classList.add('border-brand-green/70', 'bg-brand-greenDark/30');
+    } else {
+        card.classList.remove('border-brand-green/70', 'bg-brand-greenDark/30');
+        card.classList.add('border-fine-border/50', 'bg-fine-bg', 'opacity-60');
+    }
+};
+
+window.saveVimeoVisibility = async () => {
+    const btn = document.getElementById('vimeo-save-btn');
+    const originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Salvando...';
+
+    try {
+        // Collect all checked IDs
+        const checked = [...document.querySelectorAll('.vimeo-toggle:checked')].map(cb => cb.dataset.id);
+        await saveVimeoSettings(checked);
+        visibleVimeoIds = checked;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Salvo!';
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+        }, 2000);
+    } catch (err) {
+        alert('Erro ao salvar: ' + err.message);
+        btn.innerHTML = originalHTML;
+        btn.disabled = false;
+    }
+};
+

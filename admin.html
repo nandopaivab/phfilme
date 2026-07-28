@@ -115,6 +115,7 @@
             <div class="border-b border-fine-border flex gap-4 md:gap-6 overflow-x-auto text-xs uppercase tracking-widest font-semibold pb-1">
                 <button onclick="switchTab('leads')" id="tab-btn-leads" class="tab-btn active pb-3 transition duration-200 focus:outline-none whitespace-nowrap"><i class="fa-regular fa-envelope mr-1.5"></i> Propostas <span id="leads-count-badge" class="bg-gold/20 text-gold px-2 py-0.5 rounded-full text-[9px] ml-1">0</span></button>
                 <button onclick="switchTab('portfolio')" id="tab-btn-portfolio" class="tab-btn pb-3 transition duration-200 focus:outline-none whitespace-nowrap"><i class="fa-solid fa-film mr-1.5"></i> Portfólio</button>
+                <button onclick="switchTab('vimeo')" id="tab-btn-vimeo" class="tab-btn pb-3 transition duration-200 focus:outline-none whitespace-nowrap"><i class="fa-brands fa-vimeo-v mr-1.5"></i> Vitrine Vimeo</button>
                 <button onclick="switchTab('plans')" id="tab-btn-plans" class="tab-btn pb-3 transition duration-200 focus:outline-none whitespace-nowrap"><i class="fa-solid fa-receipt mr-1.5"></i> Pacotes</button>
                 <button onclick="switchTab('agenda')" id="tab-btn-agenda" class="tab-btn pb-3 transition duration-200 focus:outline-none whitespace-nowrap"><i class="fa-regular fa-calendar-check mr-1.5"></i> Agenda</button>
                 <button onclick="switchTab('settings')" id="tab-btn-settings" class="tab-btn pb-3 transition duration-200 focus:outline-none whitespace-nowrap"><i class="fa-solid fa-sliders mr-1.5"></i> Configurações do Site</button>
@@ -169,6 +170,41 @@
 
                 <!-- Films Grid -->
                 <div id="admin-portfolio-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- TAB CONTENT: VIMEO -->
+            <div id="tab-vimeo" class="tab-pane hidden space-y-6">
+                <div class="flex justify-between items-start flex-wrap gap-4">
+                    <div>
+                        <h2 class="font-serif text-xl md:text-2xl text-fine-text font-normal">Vitrine Vimeo</h2>
+                        <p class="text-xs text-fine-muted font-light mt-0.5">Escolha quais vídeos da sua vitrine aparecem no site. Ative ou desative individualmente.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="refreshVimeoVideos()" id="vimeo-refresh-btn" class="px-4 py-2 text-xs border border-fine-border text-fine-muted hover:border-gold hover:text-gold rounded-full transition duration-200 flex items-center gap-1.5">
+                            <i class="fa-solid fa-rotate-right"></i> Atualizar lista
+                        </button>
+                        <button onclick="saveVimeoVisibility()" id="vimeo-save-btn" class="bg-gold hover:bg-gold-dark text-white px-5 py-2 rounded-full text-xs uppercase tracking-widest font-semibold transition duration-300 flex items-center gap-1.5 shadow-lg shadow-gold/10">
+                            <i class="fa-solid fa-check text-[10px]"></i> Salvar Seleção
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Info banner -->
+                <div class="bg-brand-greenDark/30 border border-brand-green/30 rounded-xl p-4 text-xs text-fine-muted font-light flex items-start gap-3">
+                    <i class="fa-solid fa-circle-info text-gold mt-0.5 shrink-0"></i>
+                    <span>Os vídeos abaixo são carregados automaticamente da sua vitrine no Vimeo. <strong class="text-fine-text">Ative apenas os que deseja exibir no site</strong> e clique em "Salvar Seleção". Quando publicar um vídeo novo no Vimeo, clique em "Atualizar lista" para ele aparecer aqui.</span>
+                </div>
+
+                <!-- Loading state -->
+                <div id="vimeo-admin-loading" class="text-center py-12 text-fine-muted font-light text-sm">
+                    <i class="fa-solid fa-spinner animate-spin text-xl text-gold mb-3 block"></i>
+                    Carregando vídeos do Vimeo...
+                </div>
+
+                <!-- Videos grid -->
+                <div id="vimeo-admin-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden">
                     <!-- Populated by JS -->
                 </div>
             </div>
