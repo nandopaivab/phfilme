@@ -1,7 +1,8 @@
 <?php
 /**
  * PHFILME - Vimeo Showcase Proxy
- * Fetches video IDs from a Vimeo Showcase page server-side to avoid CORS issues.
+ * Fetches video IDs from the Vimeo Showcase EMBED page (server-side) to avoid CORS issues.
+ * The embed page is static HTML and reliably contains video IDs unlike the main page.
  * Returns a JSON array of Vimeo video IDs found in the showcase.
  */
 
@@ -9,11 +10,12 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: public, max-age=3600'); // Cache for 1 hour
 
-$showcaseUrl = 'https://vimeo.com/showcase/12345001';
+$showcaseId = '12345001';
+$embedUrl = "https://vimeo.com/showcase/{$showcaseId}/embed";
 
-// Fetch the showcase page
+// Fetch the showcase EMBED page (static HTML, contains video IDs reliably)
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $showcaseUrl);
+curl_setopt($ch, CURLOPT_URL, $embedUrl);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -23,37 +25,55 @@ $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
 if ($httpCode !== 200 || !$html) {
-    echo json_encode(['success' => false, 'error' => 'Failed to fetch Vimeo showcase', 'videos' => []]);
+    echo json_encode(['success' => false, 'error' => 'Failed to fetch Vimeo showcase embed', 'videos' => []]);
     exit;
 }
 
-// Extract video IDs using multiple regex patterns
+// Extract video IDs - the embed page uses /video/ID format
 $videoIds = [];
 
-// Pattern 1: /videos/ID
-preg_match_all('/\/videos\/(\d{7,})/', $html, $matches);
+// Pattern 1: /video/ID (primary pattern in embed pages)
+preg_match_all('/\/video\/(\d{7,})/', $html, $matches);
 $videoIds = array_merge($videoIds, $matches[1]);
 
-// Pattern 2: clip_ID 
-preg_match_all('/clip_(\d{7,})/', $html, $matches);
+// Pattern 2: clip_id or data-clip-id
+preg_match_all('/clip[_-]id["\s:=]+["\']?(\d{7,})/', $html, $matches);
 $videoIds = array_merge($videoIds, $matches[1]);
 
-// Pattern 3: data-clip-id="ID"
-preg_match_all('/data-clip-id="(\d{7,})"/', $html, $matches);
+// Pattern 3: "id":NUMBER in JSON config blocks
+preg_match_all('/"id"\s*:\s*(\d{7,})/', $html, $matches);
 $videoIds = array_merge($videoIds, $matches[1]);
 
-// Pattern 4: vimeo.com/ID (but not showcase IDs)
-preg_match_all('/vimeo\.com\/(\d{7,})/', $html, $matches);
-$videoIds = array_merge($videoIds, $matches[1]);
-
-// Remove duplicates and the showcase ID itself
+// Remove duplicates and filter out the showcase ID itself and obviously non-video IDs
 $videoIds = array_unique($videoIds);
-$videoIds = array_values(array_filter($videoIds, function($id) {
-    return $id !== '12345001';
+$videoIds = array_values(array_filter($videoIds, function($id) use ($showcaseId) {
+    // Exclude the showcase ID and any ID that's too long (likely timestamps/hashes)
+    return $id !== $showcaseId && strlen($id) <= 12;
 }));
 
+// Verify each ID is a real video by checking oEmbed (optional but ensures quality)
+$verifiedIds = [];
+foreach ($videoIds as $id) {
+    $oembedUrl = "https://vimeo.com/api/oembed.json?url=https://vimeo.com/{$id}";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $oembedUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_NOBODY, false);
+    $response = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    
+    if ($code === 200) {
+        $data = json_decode($response, true);
+        if (isset($data['title'])) {
+            $verifiedIds[] = $id;
+        }
+    }
+}
+
 echo json_encode([
-    'success' => true, 
-    'count' => count($videoIds),
-    'videos' => $videoIds
+    'success' => true,
+    'count' => count($verifiedIds),
+    'videos' => $verifiedIds
 ]);
