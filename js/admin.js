@@ -1429,8 +1429,8 @@ async function fetchAndRenderVimeoAdmin() {
     gridEl.classList.add('hidden');
 
     try {
-        // Fetch video IDs from PHP proxy
-        const proxyRes = await fetch('./vimeo-proxy.php');
+        // Fetch video IDs from PHP proxy (cache-busted)
+        const proxyRes = await fetch(`./vimeo-proxy.php?t=${Date.now()}`);
         if (!proxyRes.ok) throw new Error('Proxy não respondeu');
         const proxyData = await proxyRes.json();
 
