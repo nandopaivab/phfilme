@@ -1,7 +1,7 @@
 // PHFILME Client Application Logic
 // Orchestrates dynamic content rendering, translations, and lead submissions.
 
-import { getAgenda, getPlans, getPortfolio, saveLead, getVimeoSettings } from './data-store.js?v=3';
+import { getAgenda, getPlans, getPortfolio, saveLead, getVimeoSettings } from './data-store.js?v=5';
 
 // Global translation object containing static texts
 const translations = {
@@ -1082,25 +1082,29 @@ async function loadVimeoShowcase() {
     if (!grid) return;
 
     try {
-        // Step 1: Fetch video IDs from our PHP proxy + visibility settings in parallel
-        const [proxyResponse, vimeoSettings] = await Promise.all([
-            fetch('./vimeo-proxy.php'),
-            getVimeoSettings()
-        ]);
-
+        // Step 1: Fetch video IDs from proxy (with cache buster)
         let videoIds = [];
-
-        if (proxyResponse.ok) {
-            const proxyData = await proxyResponse.json();
-            if (proxyData.success && proxyData.videos.length > 0) {
-                videoIds = proxyData.videos;
+        try {
+            const proxyResponse = await fetch(`./vimeo-proxy.php?t=${Date.now()}`);
+            if (proxyResponse.ok) {
+                const proxyData = await proxyResponse.json();
+                if (proxyData.success && proxyData.videos.length > 0) {
+                    videoIds = proxyData.videos;
+                }
             }
+        } catch (e) {
+            console.warn('Vimeo proxy error:', e);
         }
 
-        // Step 2: Filter by admin-configured visibility (if settings exist)
-        const visibleIds = vimeoSettings.visibleIds || [];
-        if (visibleIds.length > 0) {
-            videoIds = videoIds.filter(id => visibleIds.includes(id));
+        // Step 2: Filter by admin visibility settings (non-blocking — if fails, show all)
+        try {
+            const vimeoSettings = await getVimeoSettings();
+            const visibleIds = vimeoSettings.visibleIds || [];
+            if (visibleIds.length > 0) {
+                videoIds = videoIds.filter(id => visibleIds.includes(id));
+            }
+        } catch (e) {
+            console.warn('Could not load Vimeo visibility settings, showing all:', e);
         }
         
         // If proxy failed or returned no videos, use the showcase embed fallback
