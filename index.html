@@ -594,6 +594,16 @@
                     <textarea id="form-message" rows="4" placeholder="Adoramos saber detalhes! O estilo do casamento, se haverá festa externa, quantidade de convidados..." class="w-full bg-fine-surface border border-fine-border focus:border-gold focus:outline-none text-fine-text px-4 py-3 rounded-lg text-sm transition duration-300"></textarea>
                 </div>
 
+                <!-- LGPD Checkbox & Short Notice -->
+                <div class="space-y-2 pt-1">
+                    <div class="flex items-start gap-2.5 text-left">
+                        <input type="checkbox" id="form-lgpd-consent" required class="mt-1 accent-gold rounded border-fine-border bg-fine-surface cursor-pointer">
+                        <label for="form-lgpd-consent" class="text-xs text-fine-muted font-light leading-relaxed cursor-pointer select-none">
+                            Concordo com a coleta e tratamento dos meus dados exclusivamente para fins de contato e elaboração de proposta comercial, nos termos da <button type="button" onclick="openPrivacyModal()" class="text-gold underline hover:text-white transition">Política de Privacidade (LGPD)</button>.
+                        </label>
+                    </div>
+                </div>
+
                 <button type="submit" class="w-full py-4 bg-gold hover:bg-gold-dark text-white font-semibold text-xs uppercase tracking-[0.2em] rounded-full transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-gold/10">
                     <i class="fa-brands fa-whatsapp text-base"></i> <span data-translate="btn-submit">Enviar Proposta</span>
                 </button>
@@ -625,6 +635,9 @@
         <div class="max-w-7xl mx-auto px-6 space-y-4 relative">
             <p class="font-serif text-lg tracking-widest text-fine-text">PH<span class="text-gold font-light">FILME</span></p>
             <p class="font-light">© 2026 PHFILME. <span data-translate="footer-rights">Todos os direitos reservados. Brasil.</span></p>
+            <div class="flex items-center justify-center gap-4 text-xs font-light text-fine-muted">
+                <button onclick="openPrivacyModal()" class="hover:text-gold transition underline">Política de Privacidade (LGPD)</button>
+            </div>
             <p class="text-[10px] text-[#5e584f] font-light flex items-center justify-center gap-1">
                 <span data-translate="footer-dev">Desenvolvido com sofisticação responsiva.</span> 
                 <a href="admin.html" class="text-fine-muted/40 hover:text-gold transition-colors ml-1" title="Painel de Administração">
@@ -726,6 +739,100 @@
     <a href="https://wa.me/5511919432604?text=Olá, gostaria de falar sobre os filmes de casamento!" id="whatsapp-float" target="_blank" class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-2xl hover:scale-110 transition duration-300">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
+
+    <!-- PRIVACY POLICY MODAL (LGPD) -->
+    <div id="privacy-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-fine-surface border border-fine-border w-full max-w-3xl rounded-3xl p-6 md:p-10 relative shadow-2xl scale-95 transition-transform duration-300 overflow-y-auto max-h-[85vh] text-left text-fine-text">
+            <button onclick="closePrivacyModal()" class="absolute top-6 right-6 text-fine-muted hover:text-white text-2xl focus:outline-none transition z-10">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="space-y-6">
+                <div class="border-b border-fine-border pb-4">
+                    <span class="text-gold uppercase tracking-[0.2em] text-xs font-semibold block">Conformidade LGPD (Lei nº 13.709/2018)</span>
+                    <h2 class="font-serif text-2xl md:text-3xl text-fine-text mt-1">Política de Privacidade & Proteção de Dados</h2>
+                    <p class="text-xs text-fine-muted font-light mt-1">Última atualização: Agosto de 2026</p>
+                </div>
+
+                <div class="space-y-4 text-xs md:text-sm text-fine-muted font-light leading-relaxed">
+                    <p>
+                        A <strong class="text-fine-text font-normal">PH FILME LTDA</strong> está comprometida com a conscientização, transparência e proteção dos dados pessoais de seus clientes, noivos e visitantes, em estrita conformidade com a <strong class="text-fine-text font-normal">Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018)</strong>.
+                    </p>
+
+                    <div class="bg-brand-greenDark/30 border border-brand-green/30 rounded-2xl p-4 space-y-2 text-xs">
+                        <h4 class="text-gold font-semibold uppercase tracking-wider">1. Identificação do Controlador de Dados</h4>
+                        <ul class="space-y-1 text-fine-text">
+                            <li><strong>Razão Social:</strong> Ph Filme LTDA</li>
+                            <li><strong>CNPJ:</strong> 66.891.780/0001-15</li>
+                            <li><strong>E-mail de Contato / DPO:</strong> <a href="mailto:phfilme@hotmail.com" class="text-gold hover:underline">phfilme@hotmail.com</a></li>
+                            <li><strong>Telefone:</strong> (27) 99643-2604</li>
+                            <li><strong>Endereço para Correspondência:</strong> Rodovia Darly Santos, 5500, Apt 403 - Darly Santos, Vila Velha/ES, CEP: 29103-300</li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h4 class="text-fine-text font-semibold text-sm">2. Quais dados coletamos e qual a finalidade?</h4>
+                        <p>Ao preencher nosso formulário de solicitação de proposta comercial, coletamos os seguintes dados:</p>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li><strong>Nome do Casal:</strong> Para identificação e personalização do atendimento.</li>
+                            <li><strong>E-mail e Telefone:</strong> Para envio da proposta orçamentária e contato comercial via WhatsApp ou e-mail.</li>
+                            <li><strong>Data, Local e Estilo do Casamento:</strong> Para consulta prévia de disponibilidade na nossa agenda de produção.</li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h4 class="text-fine-text font-semibold text-sm">3. Base Legal e Consentimento</h4>
+                        <p>O tratamento dos seus dados fundamenta-se no <strong class="text-fine-text font-normal">Consentimento do Titular (Art. 7º, I da LGPD)</strong> e em procedimentos preliminares relacionados ao contrato a pedido do titular (Art. 7º, V da LGPD). Seus dados <strong>jamais serão vendidos, alugados ou compartilhados</strong> com terceiros para fins publicitários.</p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h4 class="text-fine-text font-semibold text-sm">4. Cookies e Tecnologias de Navegação</h4>
+                        <p>Utilizamos cookies apenas para armazenar a sua preferência de idioma (Português, Inglês, Espanhol ou Italiano) e garantir a usabilidade técnica do site. Não utilizamos cookies invasivos de rastreamento de perfil.</p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h4 class="text-fine-text font-semibold text-sm">5. Direitos do Titular dos Dados</h4>
+                        <p>Conforme previsto no Artigo 18 da LGPD, você possui o direito de, a qualquer momento e gratuitamente:</p>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li>Confirmar a existência de tratamento dos seus dados.</li>
+                            <li>Acessar seus dados armazenados em nosso sistema.</li>
+                            <li>Solicitar a correção de dados incompletos, inexatos ou desatualizados.</li>
+                            <li>Solicitar a <strong>eliminação total ou anonimização</strong> dos seus dados pessoais.</li>
+                            <li>Revogar o seu consentimento previamente concedido.</li>
+                        </ul>
+                        <p class="pt-1">Para exercer qualquer um dos seus direitos, envie um e-mail para <a href="mailto:phfilme@hotmail.com" class="text-gold hover:underline">phfilme@hotmail.com</a> com o assunto <em>"Solicitação LGPD"</em>.</p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h4 class="text-fine-text font-semibold text-sm">6. Segurança da Informação</h4>
+                        <p>Adotamos medidas administrativas e técnicas de segurança (como criptografia SSL/HTTPS no tráfego de dados e controle estrito de acesso no nosso banco de dados Firebase) para proteger os seus dados contra acessos não autorizados ou destruição acidental.</p>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-fine-border flex justify-end">
+                    <button onclick="closePrivacyModal()" class="px-6 py-3 bg-gold hover:bg-gold-dark text-white rounded-full text-xs uppercase tracking-widest font-semibold transition">Entendido e Ciente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COOKIE CONSENT BANNER (LGPD) -->
+    <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 md:left-6 md:right-auto md:max-w-md z-40 bg-fine-surface/95 border border-fine-border backdrop-blur-md rounded-2xl p-5 shadow-2xl space-y-3 hidden transition-all duration-300">
+        <div class="flex items-start gap-3">
+            <i class="fa-solid fa-cookie-bite text-gold text-xl shrink-0 mt-0.5"></i>
+            <div class="space-y-1 text-xs">
+                <p class="font-semibold text-fine-text">Respeitamos a sua privacidade</p>
+                <p class="text-fine-muted font-light leading-relaxed">
+                    Utilizamos cookies essenciais para oferecer uma melhor experiência e memorizar suas preferências de idioma. Veja nossa <button onclick="openPrivacyModal()" class="text-gold underline hover:text-white">Política de Privacidade</button>.
+                </p>
+            </div>
+        </div>
+        <div class="flex justify-end gap-2 text-xs">
+            <button onclick="acceptCookies()" class="w-full py-2.5 bg-gold hover:bg-gold-dark text-white rounded-full font-semibold uppercase tracking-wider text-[10px] transition shadow-md">
+                Aceitar e Continuar
+            </button>
+        </div>
+    </div>
 
     <!-- Main Client JS Application as module -->
     <script type="module" src="js/app.js?v=5"></script>

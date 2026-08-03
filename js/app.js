@@ -493,6 +493,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupProposalForm();
     forceAutoplay();
     loadVimeoShowcase();
+    setupCookieBanner();
 });
 
 // 1. Scroll Progress Bar
@@ -1223,5 +1224,50 @@ window.openVimeoVideoModal = (videoId) => {
     modal.classList.remove('hidden');
     setTimeout(() => { modal.classList.remove('opacity-0'); }, 50);
 };
+
+// 8. LGPD Privacy Modal & Cookie Consent System
+window.openPrivacyModal = () => {
+    const modal = document.getElementById('privacy-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        const content = modal.firstElementChild;
+        if (content) content.classList.remove('scale-95');
+    }, 10);
+};
+
+window.closePrivacyModal = () => {
+    const modal = document.getElementById('privacy-modal');
+    if (!modal) return;
+    modal.classList.add('opacity-0');
+    const content = modal.firstElementChild;
+    if (content) content.classList.add('scale-95');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
+};
+
+function setupCookieBanner() {
+    const cookieConsent = localStorage.getItem('phfilme_cookie_consent');
+    const banner = document.getElementById('cookie-banner');
+    if (!cookieConsent && banner) {
+        setTimeout(() => {
+            banner.classList.remove('hidden');
+        }, 1500);
+    }
+}
+
+window.acceptCookies = () => {
+    localStorage.setItem('phfilme_cookie_consent', 'accepted');
+    const banner = document.getElementById('cookie-banner');
+    if (banner) {
+        banner.classList.add('opacity-0');
+        setTimeout(() => {
+            banner.classList.add('hidden');
+        }, 300);
+    }
+};
+
 
 
